@@ -47,4 +47,3 @@ if __name__=='__main__':
         send_tweet(args.send)
     if args.extract:
         scrape_tweets(args.extract)
-
