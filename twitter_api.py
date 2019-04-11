@@ -1,10 +1,3 @@
-'''
-
-Twitter API Interaction
-@Author Trevor Adriaanse
-
-'''
-
 import argparse
 import tweepy as tw
 import config
