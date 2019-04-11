@@ -28,13 +28,14 @@ def send_tweet(tweet):
 def scrape_tweets(user):
     if user.startswith('@'):
         user = user[1:]
-    with open(user+'_raw_tweets.txt', 'w') as f:
+    with open(user+'_raw_tweets.txt', 'w', encoding='utf-8') as f:
         for tweet in tw.Cursor(api.user_timeline, tweet_mode='extended', screen_name=user).items():
             date, time = tuple(str(tweet.created_at).split())
             if not args.retweet and tweet.full_text.startswith('RT'):
                 pass
             else:
-                f.write(tweet.id_str+'\t'+date+'\t'+time+'\t'+tweet.full_text+'\n')          
+                text = tweet.full_text.replace("\n", " <NL> ")
+                f.write(tweet.id_str+'\t'+date+'\t'+time+'\t'+text+'\n')          
 
 if __name__=='__main__':
     if len(sys.argv) < 2:
