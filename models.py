@@ -77,8 +77,7 @@ def load_model_weights(model):
 
 parser = argparse.ArgumentParser(description='Run the Keras Models')
 # one of the following is required:
-parser.add_argument('-t', '--train', type=str, help='Train a new model')
-parser.add_argument('-l', '--load', type=str, help='Load a cached model')
+parser.add_argument('-t', '--type', type=str, help='Train a new model')
 # args for the model
 parser.add_argument('-tf','--tweets-filepath', default="", type=str, help='File path to load tweets')
 parser.add_argument('-wf','--weights-filepath', default="new-file.txt", type=str, help='Load or store weights')
@@ -97,8 +96,8 @@ if __name__=='__main__':
         args.print_help()
         sys.exit(1)
     args = parser.parse_args()
-    if not (args.train or args.load):
-        parser.error('Set at least one of --train or --load')
+    if not (args.type):
+        parser.error('Set --type to "train" or "load"')
 
     with open(args.tweets_filepath) as o:
         tweets_json = json.load(o)
@@ -107,16 +106,16 @@ if __name__=='__main__':
     model = create_model(X, Y, max_len, total_words)
     model.compile(loss='categorical_crossentropy', optimizer='adam')
 
-    if args.train:
+    if args.type == "train":
         # Train a new model
         checkpoint = ModelCheckpoint(args.weights_filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
         early_stopping = EarlyStopping(monitor='loss', min_delta=args.early_stopping)
         callbacks_list = [checkpoint, early_stopping]
         model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
         
-    if args.load:
+    if args.type == "load":
         # Load a model from file 
-        model.load_weights(args.weights_fielpaths)
+        model.load_weights(args.weights_filepath)
 
     for _ in range(10):
         print(generate_text("<s>", 50, max_len, model, tokenizer))
