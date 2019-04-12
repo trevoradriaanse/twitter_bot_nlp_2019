@@ -9,8 +9,7 @@ from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
 import keras.utils as ku 
 import numpy as np
-
-from utils import get_donald_trump_tweets
+import json 
 
 # ref: https://medium.com/@shivambansal36/language-modelling-text-generation-using-lstms-deep-learning-for-nlp-ed36b224b275
 
@@ -18,13 +17,15 @@ def prep_data(tweets):
     '''
     Data is a list of tweets. 
     '''
-    tokenizer = Tokenizer(num_words=None, filters='"$%&()*+-;=[\\]^_`{|}~\t\n', lower=False, split=' ')
+    tokenizer = Tokenizer(num_words=None, filters='"%*+-=[]^_`{|}~\t\n', lower=False, split=' ')
     tokenizer.fit_on_texts(tweets)
     total_words = len(tokenizer.word_index) + 1
 
     input_sequences = []
     for tweet in tweets:
         token_list = tokenizer.texts_to_sequences([tweet])[0]
+        #input_sequences.append(token_list)
+        # adding n-grams
         for i in range(1, len(token_list)):
             n_gram_sequence = token_list[:i+1]
             input_sequences.append(n_gram_sequence)
@@ -44,9 +45,9 @@ def prep_data(tweets):
 def create_model(predictors, label, max_sequence_len, total_words):
     input_len = max_sequence_len - 1
     model = Sequential()
-    model.add(Embedding(total_words, 10, input_length=input_len))
-    model.add(LSTM(150))
-    model.add(Dropout(0.1))
+    model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
+    model.add(LSTM(args.hidden_size))
+    model.add(Dropout(args.dropout))
     model.add(Dense(total_words, activation='softmax'))
     return model
 
@@ -75,14 +76,21 @@ def load_model_weights(model):
 
 
 parser = argparse.ArgumentParser(description='Run the Keras Models')
+# one of the following is required:
 parser.add_argument('-t', '--train', type=str, help='Train a new model')
 parser.add_argument('-l', '--load', type=str, help='Load a cached model')
-#grp = parser.add_mutually_exclusive_group(required=False)
-#grp.add_argument('-r', '--retweets', dest='retweet', action='store_true', help='Retain retweets')
-#grp.add_argument('-nr', '--no_retweets', dest='retweet', action='store_false', help='Omit retweets')
+# args for the model
+parser.add_argument('-tf','--tweets-filepath', default="", type=str, help='File path to load tweets')
+parser.add_argument('-wf','--weights-filepath', default="new-file.txt", type=str, help='Load or store weights')
+
+parser.add_argument('-e','--epochs', default=50, type=int, help='Number of epochs')
+parser.add_argument('-do','--dropout', default=0.3, type=float, help='Dropout rate')
+parser.add_argument('-ea','--early-stopping', default=0.1, type=float, help='Early stopping criteria')
+parser.add_argument('-em','--embedding-size', default=100, type=int, help='Embedding dimension size')
+parser.add_argument('-hs','--hidden-size', default=100, type=int, help='Hidden layer size')
+
+
 #parser.set_defaults(retweet=False)
-
-
 
 if __name__=='__main__':
     if len(sys.argv) < 1:
@@ -92,20 +100,23 @@ if __name__=='__main__':
     if not (args.train or args.load):
         parser.error('Set at least one of --train or --load')
 
-    X, Y, max_len, total_words, tokenizer = prep_data(get_donald_trump_tweets())
+    with open(args.tweets_filepath) as o:
+        tweets_json = json.load(o)
+    tweets = [tweet[3] for tweet in tweets_json]
+    X, Y, max_len, total_words, tokenizer = prep_data(tweets)
     model = create_model(X, Y, max_len, total_words)
     model.compile(loss='categorical_crossentropy', optimizer='adam')
-    filepath = "weights.best.hdf5.2"
 
     if args.train:
         # Train a new model
-        checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
-        callbacks_list = [checkpoint]
-        model.fit(X, Y, epochs=100, verbose=1, callbacks=callbacks_list)
+        checkpoint = ModelCheckpoint(args.weights_filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
+        early_stopping = EarlyStopping(monitor='loss', min_delta=args.early_stopping)
+        callbacks_list = [checkpoint, early_stopping]
+        model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
         
     if args.load:
         # Load a model from file 
-        model.load_weights(filepath)
+        model.load_weights(args.weights_fielpaths)
 
     for _ in range(10):
         print(generate_text("<s>", 50, max_len, model, tokenizer))
