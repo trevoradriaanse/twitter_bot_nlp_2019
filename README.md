@@ -21,7 +21,9 @@ Setup a config.py using the format from config_format.py. Then, run the followin
 
 2. Parse tweets
 Run the following command: `python3 parse_tweets.py --parse RAW_TWEET_FILE_PATH`
-This sets up the tweets in a list of lists. Each tweet's list is of the format [TWEET_ID, TWEET_DATE, TWEET_TIME, TWEET_TEXT]. In our parsing, we made some decisions for how to tokenize tweets, for example:
+This sets up the tweets in a list of lists. Each tweet's list is of the format [TWEET_ID, TWEET_DATE, TWEET_TIME, TWEET_TEXT]. 
+
+In our parsing, we made some decisions for how to tokenize tweets, for example:
 
 - We added whitespace around most punctuation marks so that they are their own tokens. However, we left conjunctions in tact (it's, I'd.)
 - We removed all links (which represent either quote tweets or images.) We replaced these with a MEDIA tag (defaults to "<MEDIA>".)
