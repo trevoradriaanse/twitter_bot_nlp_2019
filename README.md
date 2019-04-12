@@ -2,7 +2,7 @@
 
 For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from a user's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
 
-### Training Model + Generating Text 
+## Training Model
 Run the following comamnd: `models.py --type train  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
 There are a number of optional arguments that you can set: 
 - -e: Number of epochs (default is 50)
@@ -11,10 +11,10 @@ There are a number of optional arguments that you can set:
 - -em: Embedding size (default is 100)
 - -hs: Number of nodes in dense hidden layers (default is 100)
 
-### Using Pre-Cached Weights 
+## Building Model from Pre-Cached Weights 
 Run the following comamnd: `models.py --type load  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
 
-### Scraping from Twitter + Using our Parser
+## Scraping from Twitter + Using our Parser
 There are two steps you'll have to do to get tweets into a suitable format for our model. 
 1. Scrape tweets
 Setup a config.py using the format from config_format.py. Then, run the following command: `python3 twitter_api.py --extract USER_NAME`
