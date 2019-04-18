@@ -1,7 +1,8 @@
 import argparse
 import sys
 import random
-
+import csv
+import os
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
@@ -38,7 +39,7 @@ def prep_data(tweets):
 
     predictors, label = input_sequences[:,:-1],input_sequences[:,-1]
     label = ku.to_categorical(label, num_classes=total_words)
-
+    # label = np.zeros((label, total_words), dtype=np.int8)
     return predictors, label, max_sequence_len, total_words, tokenizer
 
 
@@ -74,6 +75,32 @@ def generate_text(seed_text, next_words, max_sequence_len, model, tokenizer):
 def load_model_weights(model):
     model.load_weights("weights.best.hdf5")
 
+
+def write_to_csv(args, result_text, result_file):
+    """
+    This function writes the result to csv for analysis
+    :param env:
+    :param iter:
+    :param reward:
+    :return:
+    """
+
+    if os.path.exists(result_file):
+        with open(result_file, mode='a') as csv_file:
+            write_helper(args,csv_file,result_text)
+    else:
+        with open(result_file, mode='a') as csv_file:
+            write_helper(args,csv_file,result_text)
+
+
+def write_helper(args,csv_file,result_text):
+    fieldnames = ['epochs', 'dropout', 'earlystopping', 'dropout', 'embedding', 'hidden', 'filename','result_text']
+    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerow({'epochs': args.epochs, 'dropout': args.dropout
+                        , 'earlystopping': args.early_stopping
+                        , 'embedding': args.embedding_size, 'hidden': args.hidden_size,'filename':args.weights_filepath
+                        , 'result_text': result_text})
 
 parser = argparse.ArgumentParser(description='Run the Keras Models')
 # one of the following is required:
@@ -112,10 +139,12 @@ if __name__=='__main__':
         early_stopping = EarlyStopping(monitor='loss', min_delta=args.early_stopping)
         callbacks_list = [checkpoint, early_stopping]
         model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
-        
+        model.save(args.weights_filepath)
     if args.type == "load":
         # Load a model from file 
         model.load_weights(args.weights_filepath)
 
     for _ in range(10):
-        print(generate_text("<s>", 50, max_len, model, tokenizer))
+        generated_text = generate_text("<s>", 50, max_len, model, tokenizer)
+        print(generated_text)
+        write_to_csv(args,generated_text,'result.csv')

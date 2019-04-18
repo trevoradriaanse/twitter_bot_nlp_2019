@@ -38,7 +38,7 @@ def parse_twitter_api_tweets(filename, tweets=[], ids=[]):
                     # Replace any URL with a tag:
                     text = re.sub('https://[^\s]+', MEDIA, text)
                     # add whitespace before & after punctuation:
-                    text = re.sub("[^A-Za-z0-9\s#@<>']", ' \g<0> ', text);
+                    text = re.sub("[^A-Za-z0-9\s#@<>']", ' \g<0> ', text)
                     text = START + text
                     tweet = text + END
                     tweets.append([tweet_id, date, time, tweet])
