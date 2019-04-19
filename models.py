@@ -8,7 +8,8 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
-import keras.utils as ku 
+import keras.utils as ku
+from tensorflow.contrib.keras.api.keras.initializers import Constant
 import numpy as np
 import json 
 
@@ -46,12 +47,53 @@ def prep_data(tweets):
 def create_model(predictors, label, max_sequence_len, total_words):
     input_len = max_sequence_len - 1
     model = Sequential()
-    model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
+    #model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
+
+    word_to_index, index_to_word, word_to_embedding = read_glove_file('glove.twitter.27B.25d.txt')
+    pretrained_embedding = create_pretrained_embedding_layer(word_to_embedding, word_to_index, False)
+    model.add(pretrained_embedding)
+
     model.add(LSTM(args.hidden_size))
     model.add(Dropout(args.dropout))
     model.add(Dense(total_words, activation='softmax'))
     return model
 
+# transfer learning with GloVe
+# cf.: Jeffrey Pennington, Richard Socher, and Christopher D. Manning. 2014. GloVe: Global Vectors for Word Representation.
+# https://stackoverflow.com/questions/48677077/how-do-i-create-a-keras-embedding-layer-from-a-pre-trained-word-embedding-datase
+
+def read_glove_file(glove_file):
+    with open(glove_file) as f:
+        word_to_embedding = {}
+        word_to_index = {}
+        index_to_word = {}
+
+        for line in f:
+            record = line.strip().split()
+            token = record[0]
+            word_to_embedding[token] = np.array(record[1:], dtype=np.float64)
+
+        tokens = sorted(word_to_embedding.keys())
+        for idx, tok in enumerate(tokens):
+            keras_index = idx + 1  # 0 is reserved for masking in Keras
+            word_to_index[tok] = keras_index 
+            index_to_word[keras_index] = tok
+
+    return word_to_index, index_to_word, word_to_embedding
+
+def create_pretrained_embedding_layer(word_to_embedding, word_to_index, is_trainable):
+    vocab_len = len(word_to_index) + 1  # adding 1 to account for masking
+    embedding_dim = next(iter(word_to_embedding.values())).shape[0]
+
+    embedding_matrix = np.zeros((vocab_len, embedding_dim))
+    for word, index in word_to_index.items():
+        try:
+            embedding_matrix[index, :] = word_to_embedding[word]
+        except ValueError:
+            pass
+    embedding_layer = Embedding(vocab_len, 
+        embedding_dim, embeddings_initializer=Constant(embedding_matrix), trainable=is_trainable)
+    return embedding_layer
 
 def generate_text(seed_text, next_words, max_sequence_len, model, tokenizer):
     for j in range(next_words):
@@ -114,7 +156,6 @@ parser.add_argument('-do','--dropout', default=0.3, type=float, help='Dropout ra
 parser.add_argument('-ea','--early-stopping', default=0.1, type=float, help='Early stopping criteria')
 parser.add_argument('-em','--embedding-size', default=100, type=int, help='Embedding dimension size')
 parser.add_argument('-hs','--hidden-size', default=100, type=int, help='Hidden layer size')
-
 
 #parser.set_defaults(retweet=False)
 
