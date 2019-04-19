@@ -3,7 +3,7 @@
 For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from a user's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
 
 ## Training Model
-Run the following comamnd: `models.py --type train  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
+Run the following command: `models.py --type train  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
 There are a number of optional arguments that you can set: 
 - -e: Number of epochs (default is 50)
 - -do: Dropout (default is 0.3)
@@ -12,7 +12,7 @@ There are a number of optional arguments that you can set:
 - -hs: Number of nodes in dense hidden layers (default is 100)
 
 ## Building Model from Pre-Cached Weights 
-Run the following comamnd: `models.py --type load  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
+Run the following command: `models.py --type load  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
 
 ## Scraping from Twitter + Using our Parser
 There are two steps you'll have to do to get tweets into a suitable format for our model. 
@@ -29,3 +29,8 @@ In our parsing, we made some decisions for how to tokenize tweets, for example:
 - We removed all links (which represent either quote tweets or images.) We replaced these with a MEDIA tag (defaults to "<MEDIA>".)
 - We removed all "\n" characters within a tweet and instead added a newline indicator "<NL>" to preseve structure in the recreations. 
 - We left in emojis. 
+
+
+## Transfer Learning
+
+Navigate to https://nlp.stanford.edu/projects/glove/ and download a pretrained Twitter embedding (note: file size is large).
