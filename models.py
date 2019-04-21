@@ -47,9 +47,11 @@ def prep_data(tweets):
 def create_model(predictors, label, max_sequence_len, total_words,regular):
     input_len = max_sequence_len - 1
     model = Sequential()
-    if regular:
+    if regular == "regular":
+        print("Training with LSTM")
         model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
     else:
+        print("Training with Glove")
         word_to_index, index_to_word, word_to_embedding = read_glove_file('glove.twitter.27B.25d.txt')
         pretrained_embedding = create_pretrained_embedding_layer(word_to_embedding, word_to_index, False)
         model.add(pretrained_embedding)
