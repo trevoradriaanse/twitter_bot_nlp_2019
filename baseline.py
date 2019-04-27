@@ -51,7 +51,7 @@ def perplexity(tweets, tweet_dict, probs):
             tweet_prob *= word_prob
         perplexity = 1/(pow(tweet_prob, 1.0/tweet_len))
         perps.append(perplexity)
-    return perplexity
+    return perps
 
 if __name__ == '__main__':
     tweets = codecs.open("ALL_AOC_TWEETS.txt")
@@ -63,4 +63,4 @@ if __name__ == '__main__':
     # Generate
     for i in range(0, 9):
         print(GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the") + "\n")
-        print('Perplexity:', perplexity)
+        print('Perplexity:', perp)
