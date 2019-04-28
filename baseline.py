@@ -44,6 +44,18 @@ def bigram(tweets, tweet_dict):
 parser = argparse.ArgumentParser(description='Run the Baseline Model')
 parser.add_argument('-tf','--tweets-filepath', default="", type=str, help='File path to load tweets')
 
+def perplexity(tweets, tweet_dict, probs):
+    perps = []
+    tweet_prob = 1
+    for tweet in tweets:
+        tweet_len = len(tweet)
+        for word in tweet.split():
+            word_prob = probs[tweet_dict[word.lower()]]
+            tweet_prob *= word_prob
+        perplexity = 1/(pow(tweet_prob, 1.0/tweet_len))
+        perps.append(perplexity)
+    return perps
+
 if __name__ == '__main__':
     args = parser.parse_args()
     with open(args.tweets_filepath) as o:
@@ -52,6 +64,9 @@ if __name__ == '__main__':
     tweet_word = return_set(tweets)
     tweet_dict = make_dict(tweet_word)
     probs = bigram(tweets, tweet_dict)
+    perp = perplexity(tweets, tweet_dict, probs)
+
     # Generate
     for i in range(0, 9):
-        print(GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 20, "<s>") + "\n")
+        print(GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the") + "\n")
+        print('Perplexity:', perp)
