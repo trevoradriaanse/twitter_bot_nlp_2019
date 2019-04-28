@@ -44,15 +44,16 @@ def prep_data(tweets):
     return predictors, label, max_sequence_len, total_words, tokenizer
 
 
-def create_model(predictors, label, max_sequence_len, total_words):
+def create_model(predictors, label, max_sequence_len, total_words, pre_trained):
     input_len = max_sequence_len - 1
     model = Sequential()
-    #model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
 
-    word_to_index, index_to_word, word_to_embedding = read_glove_file('glove.twitter.27B.25d.txt')
-    pretrained_embedding = create_pretrained_embedding_layer(word_to_embedding, word_to_index, False)
-    model.add(pretrained_embedding)
-
+    if pre_trained:
+        word_to_index, index_to_word, word_to_embedding = read_glove_file('glove.twitter.27B.25d.txt')
+        pretrained_embedding = create_pretrained_embedding_layer(word_to_embedding, word_to_index, False)
+        model.add(pretrained_embedding)
+    else: 
+        model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
     model.add(LSTM(args.hidden_size))
     model.add(Dropout(args.dropout))
     model.add(Dense(total_words, activation='softmax'))
@@ -156,6 +157,7 @@ parser.add_argument('-do','--dropout', default=0.3, type=float, help='Dropout ra
 parser.add_argument('-ea','--early-stopping', default=0.1, type=float, help='Early stopping criteria')
 parser.add_argument('-em','--embedding-size', default=100, type=int, help='Embedding dimension size')
 parser.add_argument('-hs','--hidden-size', default=100, type=int, help='Hidden layer size')
+parser.add_argument('-pt', '--pre-trained', default=False, type=bool, help="Use Pre-trained embedding")
 
 #parser.set_defaults(retweet=False)
 
@@ -171,7 +173,7 @@ if __name__=='__main__':
         tweets_json = json.load(o)
     tweets = [tweet[3] for tweet in tweets_json]
     X, Y, max_len, total_words, tokenizer = prep_data(tweets)
-    model = create_model(X, Y, max_len, total_words)
+    model = create_model(X, Y, max_len, total_words, args.pre_trained)
     model.compile(loss='categorical_crossentropy', optimizer='adam')
 
     if args.type == "train":
