@@ -9,6 +9,7 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
+from keras.utils import multi_gpu_model
 import keras.utils as ku
 from tensorflow.contrib.keras.api.keras.initializers import Constant
 import numpy as np
@@ -47,6 +48,7 @@ def prep_data(tweets):
 def create_model(predictors, label, max_sequence_len, total_words, regular):
     input_len = max_sequence_len - 1
     model = Sequential()
+
     if regular == "regular":
         print("Training with LSTM")
         model.add(Embedding(total_words, args.embedding_size, input_length=input_len))
@@ -126,7 +128,7 @@ def load_model_weights(model):
     model.load_weights("weights.best.hdf5")
 
 
-def write_to_csv(args, result_text, result_file):
+def write_to_csv(args, result_text, result_file, loss):
     """
     This function writes the result to csv for analysis
     :param env:
@@ -138,16 +140,16 @@ def write_to_csv(args, result_text, result_file):
     if os.path.exists(result_file):
         mode = False
         with open(result_file, mode='a') as csv_file:
-            write_helper(args, csv_file, result_text, mode)
+            write_helper(args, csv_file, result_text, mode, loss)
     else:
         mode = True
         with open(result_file, mode='w+') as csv_file:
-            write_helper(args, csv_file, result_text, mode)
+            write_helper(args, csv_file, result_text, mode, loss)
 
 
-def write_helper(args, csv_file, result_text, mode):
+def write_helper(args, csv_file, result_text, mode, loss):
     fieldnames = ['epochs', 'dropout', 'model', 'earlystopping', 'dropout', 'embedding', 'hidden', 'filename',
-                  'result_text']
+                  'result_text', 'loss']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     if mode:
         writer.writeheader()
@@ -155,7 +157,7 @@ def write_helper(args, csv_file, result_text, mode):
                         , 'earlystopping': args.early_stopping
                         , 'embedding': args.embedding_size, 'hidden': args.hidden_size,
                      'filename': args.weights_filepath
-                        , 'result_text': result_text})
+                        , 'result_text': result_text, 'loss': str(loss)})
 
 
 parser = argparse.ArgumentParser(description='Run the Keras Models')
@@ -186,14 +188,22 @@ if __name__ == '__main__':
     tweets = [tweet[3] for tweet in tweets_json]
     X, Y, max_len, total_words, tokenizer = prep_data(tweets)
     model = create_model(X, Y, max_len, total_words, args.glove)
+
+    try:
+        model = multi_gpu_model(model)
+    except:
+        pass
+
     model.compile(loss='categorical_crossentropy', optimizer='adam')
 
+    loss = []
     if args.type == "train":
         # Train a new model
         checkpoint = ModelCheckpoint(args.weights_filepath, monitor='loss', verbose=1, save_best_only=True, mode='min')
         early_stopping = EarlyStopping(monitor='loss', min_delta=args.early_stopping)
         callbacks_list = [checkpoint, early_stopping]
-        model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
+        history = model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
+        loss = history.history['loss']
         # model.save(args.weights_filepath)
     if args.type == "load":
         # Load a model from file 
@@ -202,4 +212,4 @@ if __name__ == '__main__':
     for _ in range(10):
         generated_text = generate_text("<s>", 50, max_len, model, tokenizer)
         print(generated_text)
-        write_to_csv(args, generated_text, 'result.csv')
+        write_to_csv(args, generated_text, 'result.csv', np.min(loss))
