@@ -5,36 +5,82 @@ from sklearn.metrics.pairwise import cosine_similarity as cosine_similarity_skle
 from sklearn.model_selection import train_test_split
 from keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import KFold, cross_val_score
+import numpy as np 
 import json
 import argparse
 import sys
 import ast
+import difflib, distance
 
+
+UNKNOWN_TOKEN = "<UNK>"
 ### PERPLEXITY ###
-def perplexity(tweets, tweet_dict, probs):
-    perps = []
-    tweet_prob = 1
+def unigram_probs(tweets):
+
+    # create a list of all the indiviaul words in the tweets:
+    words = [UNKNOWN_TOKEN]
     for tweet in tweets:
-        tweet_len = len(tweet)
-        for word in tweet.split():
-            word_prob = probs[tweet_dict[word]]
-            tweet_prob *= word_prob
-        perplexity = 1/(pow(tweet_prob, 1.0/tweet_len))
-        perps.append(perplexity)
+        tokens = tweet.split(" ")
+        words.extend(tokens)
+    vocab = list(set(words))
+
+    # turns list of vocab into a dict that looks like {id: word}
+    word_index_dict = {}
+    for i, line in enumerate(vocab):
+        word_index_dict[line.strip()] = i
+
+    # get counts of each word
+    counts = np.zeros(len(word_index_dict), dtype=int)
+    for tweet in tweets:
+        tokens = tweet.strip().split(" ")
+        for token in tokens:
+            counts[word_index_dict[token]] += 1
+    counts[word_index_dict[UNKNOWN_TOKEN]] = 1
+
+    probs = counts / np.sum(counts)
+    return probs, word_index_dict
+
+def perplexity(tweets, probs, word_index_dict):
+    perps = []
+    for tweet in tweets:
+        tweet_prob = 1
+        tokens = tweet.split(" ")
+        tweet_len = len(tokens)
+        for word in tokens:
+            if word != "":
+                if word_index_dict.get(word):
+                    word_prob = probs[word_index_dict[word]]
+                else: 
+                    word_prob = probs[word_index_dict[UNKNOWN_TOKEN]]
+                tweet_prob = tweet_prob * word_prob
+        if tweet_prob != 0:
+            perplexity = 1/(pow(tweet_prob, 1.0/tweet_len))
+            perps.append(perplexity)
     return perps
 ### END PERPLEXITY ###
 
-### COSINE SIMILARITY ###
-def create_vectors(tweets):
-    vect = TfidfVectorizer(min_df=1)
-    tfidf = vect.fit_transform(tweets)
-    return tfidf
+### SIMILARITY ###
+def find_most_similar(corpus, tweet):
+    similarity_max = 0
+    best_tweet = ""
+    best_match = [0,0,0]
+    for corpus_tweet in corpus:
+        seq = difflib.SequenceMatcher(None, corpus_tweet, tweet)
+        sim = seq.ratio()
+        if sim > similarity_max:
+            similarity_max = sim
+            best_tweet = corpus_tweet
+        match = seq.find_longest_match(0, len(corpus_tweet), 0, len(tweet))
+        if match[2] > best_match[2]:
+            best_match = match
+            best_matching_tweet = corpus_tweet
 
-def cosine_similarity(v1, v2):
-    sim = cosine_similarity_sklearn(v1, v2)
-    return sim
+    j = best_match[1]
+    k = best_match[2]
+    best_match = tweet[j:j+k]
+    return similarity_max, best_tweet, best_match, best_matching_tweet
 
-### END COSINE SIMILARITY  ###
+### END SIMILARITY  ###
 
 
 
@@ -57,10 +103,10 @@ def create_test_and_train(data, target='trump'):
     # split 90/10
     # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
     X1_train, X1_test, y1_train, y1_test = train_test_split(X1, y1, test_size=0.1, random_state=42)
-    np.save(f'{target}_train_feat', X1_train)
-    np.save(f'{target}_test_feat', X1_test)
-    np.save(f'{target}_train_labels', y1_train)
-    np.save(f'{target}_test_labels', y1_test)
+    #np.save(f"{target}_train_feat", X1_train)
+    #np.save(f"{target}_test_feat", X1_test)
+    #np.save(f"{target}_train_labels", y1_train)
+    #np.save(f"{target}_test_labels", y1_test)
     
 
 def create_classifier(vocab, labels):
@@ -145,23 +191,41 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.type == 'individual':
+
+        # Open the corpus, split into train and test.
         with open(args.tweet_filepath) as o:
             tweets_json = json.load(o)
         corpus_tweets = [tweet[3] for tweet in tweets_json]
-        tweet_word = return_set(corpus_tweets)
-        tweet_dict = make_dict(tweet_word)
-        probs = bigram(corpus_tweets, tweet_dict)
+        partition = int(.90*len(corpus_tweets))
+        corpus_train = corpus_tweets[:partition]
+        corpus_test = corpus_tweets[partition:]
+        
+        # Get unigram probabilities (to be used for perplexity calcs)
+        probs, word_index_dict = unigram_probs(corpus_train)
 
+        # Get our generated test tweets
         with open(args.test_tweets) as o:
             test_tweets = json.load(o)
 
-        perplexity_expected = perplexity(corpus_tweets, tweet_dict, probs)
-        perpelxity_test = perplexity(test_tweets, tweet_dict, probs)
-        print("Expected: ", (perplexity_expected), "Actual: ", (perpelxity_test))
+        # Calculated "expected" perplexity on the held out corpus tweets
+        # and calculate "actual" perplexity on our generated tweets.
+        # (can be from baseline or a nn model)
+        perplexity_expected = perplexity(corpus_test, probs, word_index_dict)
+        perp_trained = perplexity(corpus_train, probs, word_index_dict)
+        perpelxity_test = perplexity(test_tweets, probs, word_index_dict)
 
+        print("Trained perplexity has mean {} and variance {}".format(np.mean(perp_trained), np.std(perp_trained)))
+        print("Expected perplexity has mean {} and variance {}".format(np.mean(perplexity_expected), np.std(perplexity_expected)))
+        print("Actual perplexity has mean {} and variance {}".format(np.mean(perpelxity_test), np.std(perpelxity_test)))
 
-        sim = cosine_similarity(create_vectors(corpus_tweets), create_vectors(test_tweets))
-        print(sim)
+        for test_tweet in test_tweets:
+            max_val, tweet, best_match, best_matching_tweet = find_most_similar(corpus_tweets, test_tweet)
+            print("\n\n")
+            print("Our tweet: {}".format(test_tweet))
+            print("Most similar: {}".format(tweet))
+            print("Tweet with longest match: {}".format(best_matching_tweet))
+            print("Best match: {}".format(best_match))
+            print("With similarity of: {}".format(max_val))
 
     if args.type == 'compare':
 

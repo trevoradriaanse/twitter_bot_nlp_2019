@@ -3,3 +3,4 @@ h5py==2.9.0
 newspaper==0.2.8
 sklearn==0.0
 nltk==3.4
+Distance==0.1.3
