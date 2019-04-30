@@ -44,7 +44,7 @@ def prep_data(tweets):
     return predictors, label, max_sequence_len, total_words, tokenizer
 
 
-def create_model(predictors, label, max_sequence_len, total_words,regular):
+def create_model(predictors, label, max_sequence_len, total_words, regular):
     input_len = max_sequence_len - 1
     model = Sequential()
     if regular == "regular":
@@ -136,18 +136,22 @@ def write_to_csv(args, result_text, result_file):
     """
 
     if os.path.exists(result_file):
+        mode = False
         with open(result_file, mode='a') as csv_file:
-            write_helper(args, csv_file, result_text)
+            write_helper(args, csv_file, result_text, mode)
     else:
-        with open(result_file, mode='a') as csv_file:
-            write_helper(args, csv_file, result_text)
+        mode = True
+        with open(result_file, mode='w+') as csv_file:
+            write_helper(args, csv_file, result_text, mode)
 
 
-def write_helper(args, csv_file, result_text):
-    fieldnames = ['epochs', 'dropout', 'earlystopping', 'dropout', 'embedding', 'hidden', 'filename', 'result_text']
+def write_helper(args, csv_file, result_text, mode):
+    fieldnames = ['epochs', 'dropout', 'model', 'earlystopping', 'dropout', 'embedding', 'hidden', 'filename',
+                  'result_text']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerow({'epochs': args.epochs, 'dropout': args.dropout
+    if mode:
+        writer.writeheader()
+    writer.writerow({'epochs': args.epochs, 'dropout': args.dropout, 'model': args.glove
                         , 'earlystopping': args.early_stopping
                         , 'embedding': args.embedding_size, 'hidden': args.hidden_size,
                      'filename': args.weights_filepath
@@ -158,15 +162,14 @@ parser = argparse.ArgumentParser(description='Run the Keras Models')
 # one of the following is required:
 parser.add_argument('-t', '--type', type=str, help='Train a new model')
 # args for the model
-parser.add_argument('-g', '--glove',default= "regular",type=str, help='Train with LSTM or Glove')
+parser.add_argument('-g', '--glove', default="regular", type=str, help='Train with LSTM or Glove')
 parser.add_argument('-tf', '--tweets-filepath', default="", type=str, help='File path to load tweets')
 parser.add_argument('-wf', '--weights-filepath', default="new-file.txt", type=str, help='Load or store weights')
-parser.add_argument('-e','--epochs', default=50, type=int, help='Number of epochs')
-parser.add_argument('-do','--dropout', default=0.3, type=float, help='Dropout rate')
-parser.add_argument('-ea','--early-stopping', default=0.1, type=float, help='Early stopping criteria')
-parser.add_argument('-em','--embedding-size', default=100, type=int, help='Embedding dimension size')
-parser.add_argument('-hs','--hidden-size', default=100, type=int, help='Hidden layer size')
-
+parser.add_argument('-e', '--epochs', default=50, type=int, help='Number of epochs')
+parser.add_argument('-do', '--dropout', default=0.3, type=float, help='Dropout rate')
+parser.add_argument('-ea', '--early-stopping', default=0.1, type=float, help='Early stopping criteria')
+parser.add_argument('-em', '--embedding-size', default=100, type=int, help='Embedding dimension size')
+parser.add_argument('-hs', '--hidden-size', default=100, type=int, help='Hidden layer size')
 
 # parser.set_defaults(retweet=False)
 
@@ -191,7 +194,7 @@ if __name__ == '__main__':
         early_stopping = EarlyStopping(monitor='loss', min_delta=args.early_stopping)
         callbacks_list = [checkpoint, early_stopping]
         model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
-        model.save(args.weights_filepath)
+        # model.save(args.weights_filepath)
     if args.type == "load":
         # Load a model from file 
         model.load_weights(args.weights_filepath)
