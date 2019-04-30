@@ -2,9 +2,13 @@ from baseline import return_set, make_dict, bigram
 from models import prep_data
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity as cosine_similarity_sklearn
+from sklearn.model_selection import train_test_split
+from keras.wrappers.scikit_learn import KerasClassifier
+from sklearn.model_selection import KFold, cross_val_score
 import json
 import argparse
 import sys
+import ast
 
 ### PERPLEXITY ###
 def perplexity(tweets, tweet_dict, probs):
@@ -35,6 +39,30 @@ def cosine_similarity(v1, v2):
 
 
 ### TWEET CLASSIFIER ###
+
+
+def create_test_and_train(data, target='trump'):
+    '''
+    Input: a path to a text file containing a list of lists
+    Output: files for training and testing, using a 90/10 split
+    '''
+    contents = ''
+    with open(data) as f:
+        trump_contents = f.read()
+    tmp1 = ast.literal_eval(trump_contents)
+    data1 = np.array(tmp1)
+    labels = np.chararray(len(tmp1))
+    labels[:] = target[0]
+    X1, y1 = data1, trump_labels
+    # split 90/10
+    # https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
+    X1_train, X1_test, y1_train, y1_test = train_test_split(X1, y1, test_size=0.1, random_state=42)
+    np.save(f'{target}_train_feat', X1_train)
+    np.save(f'{target}_test_feat', X1_test)
+    np.save(f'{target}_train_labels', y1_train)
+    np.save(f'{target}_test_labels', y1_test)
+    
+
 def create_classifier(vocab, labels):
     classifier = Sequential([
         # input_dim: "Size of the vocabulary", output_dim: "Dimension of the dense embedding"
@@ -44,6 +72,7 @@ def create_classifier(vocab, labels):
         # units: "dimensionality of the output space"
         Dense(units=len(labels), activation='softmax'),
     ])
+    return classifier
 
 
 #### Next functions from A4 NLP taught by Nathan Schneider ###
@@ -136,8 +165,13 @@ if __name__ == '__main__':
 
     if args.type == 'compare':
 
-
+        create_test_and_train(args.trump_fp, args.aoc_fp)
         model = create_classifier(vocab, 2)
+        classifer = KerasClassifier(build_fn=model, epochs=100, batch_size=5, verbose=0)
+        # evaluate with cross-validation
+        kfold = KFold(n_splits=10, shuffle=True, random_state=12345)
+        results = cross_val_score(estimator, X, dummy_y, cv=kfold)
+        print("Accurary is: %.2f%% (%.2f%%)" % (results.mean()*100, results.std()*100))
         # build evaluator to differentiate between AOC and Trump 
         # how well does it classify it's own tweets? 
         # how well does it classify ours? 
