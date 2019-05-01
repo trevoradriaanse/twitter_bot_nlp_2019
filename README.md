@@ -86,7 +86,7 @@ Navigate to https://nlp.stanford.edu/projects/glove/ and download a pretrained T
 
 ## Binary Classifier Evaluation
 ### Reference https://stackabuse.com/text-classification-with-python-and-scikit-learn/
-Here we trained a binary classifier using sklearn's MultinomialNB as our classifier and both Trump and Alexandria Ocasio-Cortez's actual tweets as our training set. We first convert the tweets into numerical features using bag of words model. Then we transform the features using TFIDF which solve the issue that the bag of words model does not take into account that certain words might have high occurance in other texts. We achieved a 0.92 accuracy. We saved the model and CountVectorizer for faster evaluation.
+Here we trained a binary classifier by using sklearn's MultinomialNB as our classifier and both Trump and Alexandria Ocasio-Cortez's actual tweets as our training set. We first convert the tweets into numerical features using bag of words model. Then we transform the features using TFIDF which solves the issue that the bag of words model does not take into account that certain words might have high occurance in other texts. We achieved a 0.92 accuracy. We saved the model and CountVectorizer for faster evaluation. (Warning: different version of sklearn might result in failure of load pickle file. In this case, delete the pickle file and redo the training.)
 
 Then the script will loop all the files in the generated text folder, and evaluate all the result files by classifying whether the tweet is AOC's or Trump's. An accuracy score is calculated by wrong classification divided by size of genertated text file,in this case 100. All the results is automatically compiled into evaluation_result.csv. 
 
