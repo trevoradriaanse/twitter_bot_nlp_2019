@@ -102,3 +102,5 @@ Then the script will loop all the files in the generated text folder, and evalua
 
 Lastly, the script with loop all the generated tweets in the result file, since some of the weights cannot be loaded properly. A score is calculated and added to the result dataframe. Then it outputs a result_evaluated.xlsx since csv file messes up the row for some reason. 
 
+## Perplexity & Similarity Evaluation
+To run the perplexity and similarity, use `eval.py` and see the `run_eval.sh` script for formatting. 
