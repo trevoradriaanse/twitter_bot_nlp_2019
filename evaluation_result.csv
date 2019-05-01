@@ -1,0 +1,9 @@
+,filename,result
+0,glove_2600_aoc_3.hdf5_gen.csv,0.77
+1,glove_2600_aoc_4.hdf5_gen.csv,0.69
+2,glove_500_trump_1.hdf5_gen.csv,1.0
+3,glove_500_trump_2.hdf5_gen.csv,1.0
+4,glove_500_trump_3.hdf5_gen.csv,1.0
+5,glove_500_trump_4.hdf5_gen.csv,1.0
+6,lstm_500_trump_1.hdf5_gen.csv,1.0
+7,lstm_500_trump_2.hdf5_gen.csv,1.0
