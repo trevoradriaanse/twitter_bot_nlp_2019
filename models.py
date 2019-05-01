@@ -14,6 +14,7 @@ import keras.utils as ku
 from tensorflow.contrib.keras.api.keras.initializers import Constant
 import numpy as np
 import json
+import pandas
 
 
 # ref: https://medium.com/@shivambansal36/language-modelling-text-generation-using-lstms-deep-learning-for-nlp-ed36b224b275
@@ -160,6 +161,23 @@ def write_helper(args, csv_file, result_text, mode, loss):
                         , 'result_text': result_text, 'loss': str(loss)})
 
 
+def generate_text_pandas(size, weights_path_file):
+    if "trump" in weights_path_file.lower():
+        tweet_tag = 0
+    else:
+        tweet_tag = 1
+
+    generated_tweets = []
+    tweet_tags = []
+    for _ in range(size):
+        generated_text = generate_text("<s>", 50, max_len, model, tokenizer)
+        generated_tweets.append(generated_text)
+        tweet_tags.append(tweet_tag)
+
+    evaluation_tweet_df = pandas.DataFrame({'tweets': generated_tweets, 'tag': tweet_tags})
+    return evaluation_tweet_df
+
+
 parser = argparse.ArgumentParser(description='Run the Keras Models')
 # one of the following is required:
 parser.add_argument('-t', '--type', type=str, help='Train a new model')
@@ -190,7 +208,8 @@ if __name__ == '__main__':
     model = create_model(X, Y, max_len, total_words, args.glove)
 
     try:
-        model = multi_gpu_model(model)
+        model = multi_gpu_model(model,4)
+        print("multi")
     except:
         pass
 
@@ -205,11 +224,17 @@ if __name__ == '__main__':
         history = model.fit(X, Y, epochs=args.epochs, verbose=1, callbacks=callbacks_list)
         loss = history.history['loss']
         # model.save(args.weights_filepath)
+
     if args.type == "load":
-        # Load a model from file 
-        model.load_weights(args.weights_filepath)
+        # Load a model from file
+        model_path = os.path.join("trained_model", args.weights_filepath)
+        model.load_weights(model_path)
+        generated_df = generate_text_pandas(100, args.weights_filepath)
+        path = os.path.join("generated_text", args.weights_filepath + "_gen.csv")
+        generated_df.to_csv(path, encoding='utf-8')
 
     for _ in range(10):
         generated_text = generate_text("<s>", 50, max_len, model, tokenizer)
         print(generated_text)
-        write_to_csv(args, generated_text, 'result.csv', np.min(loss))
+        if args.type == "train":
+            write_to_csv(args, generated_text, 'result.csv', np.min(loss))
