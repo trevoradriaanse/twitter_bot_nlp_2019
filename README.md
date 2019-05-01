@@ -14,9 +14,9 @@ For our final project for a Natural Language Processing class, we designed a Lan
   - This py file computes bigram and generate text.
 - **binary_classifier.py**:
   - This py file builds a binary text classifier using actual President Trump's and Congresswoman Alexandria Ocasio-Cortez's tweets.
-  - This file will then go through all the file generated_text and calculate an accuracy score for each of them. This results is compiled in to evaluation_result.csv
+  - This file will then go through all the file in generated_text and calculate an accuracy score for each of them. This results is compiled in to evaluation_result.csv
 - **eval.py**:
-  - This py file computes perplexity and cosin similarity score for our evaluation. 
+  - This py file computes perplexity and cosin similarity score for evaluation. 
 - **generate.py**
   - This py file is from homework 1. This is a helper file for generating text.
 - **models.py**
