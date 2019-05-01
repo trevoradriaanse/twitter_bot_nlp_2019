@@ -1,6 +1,6 @@
 # twitter_bot_nlp_2019
 
-For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from a user's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
+For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from a President Trump's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
 
 
 ## File Inventory
@@ -58,6 +58,7 @@ For our final project for a Natural Language Processing class, we designed a Lan
   
 ## Training Model
 Run the following command: `models.py --type train  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
+Examples of running commands can be found in run.sh which is the script file we used for training. 
 There are a number of optional arguments that you can set: 
 - -e: Number of epochs (default is 50)
 - -do: Dropout (default is 0.3)
@@ -67,6 +68,8 @@ There are a number of optional arguments that you can set:
 
 ## Building Model from Pre-Cached Weights 
 Run the following command: `models.py --type load  -tf PARSED_TWEETS_FILE_PATH -wf WEIGHTS_FILE_PATH`
+Examples of running commands can be found in generate_text_script.sh which is the script file we used for loading pre-trained models.
+In this case, since we only uploaded lstm models to github due to the file size restriction, please run generate_text_script_small.sh. By running this script, the models.py file will load the models and generate 100 tweets for each of the model. The csv file containing these tweets will be in generated_text folder. 
 
 ## Scraping from Twitter + Using our Parser
 There are two steps you'll have to do to get tweets into a suitable format for our model. 
@@ -93,5 +96,7 @@ Navigate to https://nlp.stanford.edu/projects/glove/ and download a pretrained T
 ### Reference https://stackabuse.com/text-classification-with-python-and-scikit-learn/
 Here we trained a binary classifier by using sklearn's MultinomialNB as our classifier and both Trump and Alexandria Ocasio-Cortez's actual tweets as our training set. We first converted the tweets into numerical features using bag of words model. Then we transformed the features using TFIDF which solves the issue that the bag of words model does not take into account that certain words might have high occurance in other texts. We achieved a 0.92 accuracy. We saved the model and CountVectorizer for faster evaluation. (Warning: different version of sklearn might result in failure of loading pickle file. In this case, delete the pickle file and redo the training.)
 
-Then the script will loop all the files in the generated text folder, and evaluate all the result files by classifying whether the tweet is AOC's or Trump's. An accuracy score is calculated by wrong classification divided by size of genertated text file,in this case 100. All the results is automatically compiled into evaluation_result.csv. 
+Then the script will loop all the files in the generated text folder, and evaluate all the result files by classifying whether the tweet is AOC's or Trump's. An accuracy score is calculated by number of correct classifications divided by size of genertated text file,in this case 100. All the results is automatically compiled into evaluation_result.csv. 
+
+Lastly, the script with loop all the generated tweets in the result file, since some of the weights cannot be loaded properly. A score is calculated and added to the result dataframe. Then it outputs a result_evaluated.xlsx since csv file messes up the row for some reason. 
 
