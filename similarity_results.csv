@@ -1,0 +1,7 @@
+generated_text_json/glove_500_trump_1.hdf5_gen.csv,0.6233088761607704,16.181818181818183
+generated_text_json/glove_500_trump_2.hdf5_gen.csv,0.5495848166833711,19.454545454545453
+generated_text_json/glove_500_trump_3.hdf5_gen.csv,0.485680214197348,17.818181818181817
+generated_text_json/glove_500_trump_4.hdf5_gen.csv,0.5565292905197,20.181818181818183
+generated_text_json/lstm_500_trump_1.hdf5_gen.csv,0.5609304200076989,19.363636363636363
+generated_text_json/lstm_500_trump_2.hdf5_gen.csv,0.5233556176658987,18.454545454545453
+generated_text_json/trump_baseline.csv,0.28100653457985575,11.636363636363637

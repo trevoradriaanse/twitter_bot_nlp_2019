@@ -90,11 +90,12 @@ def find_most_similar(corpus, tweet):
 
 def write_vals(csv_file, filename, perplexity_expected, perplexity_insample, perplexity_test, avg_sim, avg_len_longest_sim):
     fieldnames = ['filename', 'perplexity_expected', 'perplexity_insample', 'perplexity_test', 'avg_sim', 'avg_len_longest_sim']
+    fieldnames = ['filename', 'avg_sim', 'avg_len_longest_sim']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     writer.writerow({'filename': filename,
-                         'perplexity_expected': perplexity_expected,
-                         'perplexity_insample': perplexity_insample,
-                         'perplexity_test': perplexity_test,
+                         #'perplexity_expected': perplexity_expected,
+                         #'perplexity_insample': perplexity_insample,
+                         #'perplexity_test': perplexity_test,
                          'avg_sim': avg_sim,
                          'avg_len_longest_sim': avg_len_longest_sim
                         })
@@ -136,8 +137,7 @@ if __name__ == '__main__':
     sim_vals = [1]
     longest_match_lens = [1]
 
-    '''
-    for test_tweet in test_tweets:
+    for test_tweet in test_tweets[0:10]:
         max_val, tweet, best_match, best_matching_tweet = find_most_similar(corpus_tweets, test_tweet)
         print("\n\n")
         print("Our tweet: {}".format(test_tweet))
@@ -147,8 +147,8 @@ if __name__ == '__main__':
         print("With similarity of: {}".format(max_val))
         sim_vals.append(max_val)
         longest_match_lens.append(len(best_match))
-    '''
-    with open('results_new.csv', 'a') as file:
+
+    with open('similarity_results.csv', 'a') as file:
         write_vals(file,
                    args.test_tweets,
                    np.mean(perplexity_expected),
