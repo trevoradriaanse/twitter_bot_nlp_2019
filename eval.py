@@ -133,9 +133,10 @@ if __name__ == '__main__':
     print("Expected perplexity has mean {} and variance {}".format(np.mean(perplexity_expected), np.std(perplexity_expected)))
     print("Actual perplexity has mean {} and variance {}".format(np.mean(perplexity_test), np.std(perplexity_test)))
 
-    sim_vals = []
-    longest_match_lens = []
+    sim_vals = [1]
+    longest_match_lens = [1]
 
+    '''
     for test_tweet in test_tweets:
         max_val, tweet, best_match, best_matching_tweet = find_most_similar(corpus_tweets, test_tweet)
         print("\n\n")
@@ -146,10 +147,10 @@ if __name__ == '__main__':
         print("With similarity of: {}".format(max_val))
         sim_vals.append(max_val)
         longest_match_lens.append(len(best_match))
-
-    with open('results_new.csv', 'w') as file:
+    '''
+    with open('results_new.csv', 'a') as file:
         write_vals(file,
-                   args.tweet_filepath,
+                   args.test_tweets,
                    np.mean(perplexity_expected),
                    np.mean(perp_trained),
                    np.mean(perplexity_test),
