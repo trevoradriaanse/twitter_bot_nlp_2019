@@ -1,3 +1,4 @@
+filename,similarity,longest matching substring
 generated_text_json/glove_500_trump_1.hdf5_gen.csv,0.6233088761607704,16.181818181818183
 generated_text_json/glove_500_trump_2.hdf5_gen.csv,0.5495848166833711,19.454545454545453
 generated_text_json/glove_500_trump_3.hdf5_gen.csv,0.485680214197348,17.818181818181817
