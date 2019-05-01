@@ -1,4 +1,4 @@
-epochs,dropout,model,earlystopping,dropout,embedding,hidden,filename,result_text,loss
+﻿epochs,dropout,model,earlystopping,dropout.1,embedding,hidden,filename,tweets,loss
 50,0.3,glove,-1,0.3,50,50,"glove_500_trump_1.hdf5","<s> . I have therefore to a the history of the first five . . . I will be signing , Pioneers and those ! . . <MEDIA> </s>",3.720484515
 50,0.3,glove,-1,0.3,50,50,"glove_500_trump_1.hdf5","<s> The Democrats are allowing of <MEDIA> . . I have therefore the best shape , and , the Dems are pouring so , but will never be . The . So , . . and the DNC . A will always upset and , and , and the Electoral .",3.720484515
 50,0.3,glove,-1,0.3,50,50,"glove_500_trump_1.hdf5","<s> The Fake Media is the Paris Environmental Accord , and the Mueller of the World the first . , and , Economy will the strongest , and Increase significantly the Border , but is the Dems is ! . </s>",3.720484515
@@ -160,3 +160,51 @@ epochs,dropout,model,earlystopping,dropout,embedding,hidden,filename,result_text
 50,0.3,glove,0.1,0.3,200,200,glove_2600_aoc_4.hdf5,"<s> I am so thankful of this campaign to be the most effective ways , and I don't have the most of human in the Bronx for . </s>",3.425485878
 50,0.3,glove,0.1,0.3,200,200,glove_2600_aoc_4.hdf5,"<s> This was the sweetest , a ) , I went it a to be vulnerable , and we will have for better . </s>",3.425485878
 50,0.3,glove,0.1,0.3,200,200,glove_2600_aoc_4.hdf5,<s> I believe that the GOP are to my first to the United of our of . <MEDIA> </s>,3.425485878
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> This week I don't believe the same folks I was a secret of the GOP here : <MEDIA> <NL> <MEDIA> <NL> <MEDIA> <MEDIA> <MEDIA> <NL> <NL> <NL> <NL> <NL> <NL> I you know about my campaign . I was a joke . ) </s>,3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,"<s> The fact , the best to have a dude was a headline and made young to say my job is creating . <MEDIA> <NL> <MEDIA> </s>",3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,"<s> This week I was thrilled for the vote . You are a very excited about the time , and see you had to me on my community ! <NL> <NL> Thank for a Just , my heart is in the general . </s>",3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> I am proud of our Bronx and fight ! <MEDIA> for a better future ! <MEDIA> <MEDIA> <NL> <NL> <MEDIA> <NL> </s>,3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> I don't know what we had the chance . <NL> . <NL> <MEDIA> </s>,3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,"<s> This is what the revolution is a great moment for a few weeks , which is a moral scourge on American Americans oppose a #GreenNewDeal , and possibly will even have more to reopen gov . <NL> <MEDIA> <MEDIA> <MEDIA> <MEDIA> <NL> <MEDIA> <MEDIA> </s>",3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> I am so much of the way of the first question : <NL> <NL> Things Conservative activist & A ready for the Senate <MEDIA> <MEDIA> <MEDIA> <MEDIA> </s>,3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> I believe a bit about the GOP is the same thing I can say you to be able to take to join with this morning . <NL> <NL> I don't have won a big deal with school students says the whole campaign . <MEDIA> <MEDIA> </s>,3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,"<s> I don't think we think the GOP doesn't even be scared that with my life . <NL> <NL> GOP Senators is the same thing . The GOP is the same game , a one is in the ground now . <MEDIA> <NL> <MEDIA> <NL> <NL> We can see a bit",3.462984511
+50,0.3,regular,-1,0.3,50,50,lstm_2600_aoc_1_no.hdf5,<s> This is the first to make it happen . <MEDIA> </s>,3.462984511
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5","<s> This moment of the right wants of calling abt politics . <NL> <NL> We've been an emergency of this ?? political words of working families of the world , because our courts are one to it's change late of the reason to take home ? ) <NL> <MEDIA> <NL> <NL>",0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5","<s> I often reflect on me , today had a dash us of us by . . <MEDIA> </s>",0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> This moment is a Special Election Day tax even advocate in their wardrobe ( host a few hrs in my district ! Made me 1 <MEDIA> <NL> you can be civil while locking on locking up kids <MEDIA> </s>,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> This moment made my place like home as folks as a plan for people . <NL> I didn't need of all . Those are 2 months encouraging notes my plaque . <NL> . It's not their someone things that they don't know what I'm happy you're a level about our,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> This moment is so we said to address a community who listen to be communities w and loved ones . It's also if I am incredibly flattered . <NL> <NL> ( We not accept my work with white nationalists at his campaign . ) <MEDIA> <NL> <MEDIA> <NL> </s>,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> The Green people about putting impacted advocate on work with a parents <NL> And they know what I do is scapegoat immigrants instead ? This <NL> <NL> <NL> There was little in this hearing and some others for my life ? <NL> <NL> And the most against Islamophobia people to,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> I often WSJ Editorial takes by such power on a good thing ? . <NL> <MEDIA> </s>,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> This is a time of small paid all working people got to only local business w / o it to do the first 5 time . </s>,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5",<s> This is the REAL conversation I support in the same resolution we were Dems that . GOP is believe in their important with the riveting place now . <MEDIA> </s>,0.278935779
+50,0.3,regular,-1,0.3,200,200,"lstm_500_aoc_1.hdf5","<s> I always entertained law school the , I serious responsibility to healthcare . . <NL> made if you take your point . <NL> <MEDIA> <NL> <NL> It's a ?? context for our system , on a good news ? is far now Trump's then by more ) we can .",0.278935779
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> I guess WSJ & a any , building , and of have to working to learn for that . We talked a GOP of the in in that that are more right , right now of our community party of policy change disasters on climate closed . ' , <NL>",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> This of the GOP is scared of this country a big money have been taken , but it was to for future . <NL> When being sure on the , the one is any the climate solution for of a up . <NL> You can't was the same or :",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> I guess a up and questioning of Wilbur trying who ???? me , as , & destroy , is , and people the opportunity to it . ) we also the most on of double of a history , we a Congress in our entire . <NL> <MEDIA> the <MEDIA>",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> This , a one , is my job , we've got a all of us when House , a Republican communities to communities how it . <MEDIA> ??? </s>",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> The GOP right is so is how the Bronx while of Congress <NL> a before of Rep <NL> What jobs : <NL> <NL> <MEDIA> : an Aviation , & are of the GND , and they ppl a major the take for a major , I don't to them up",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> This , right our in here justice , they you know to own one about the whole answer is possible of the same . <NL> . Learn , and within a real , not is a deal . <NL> <NL> We are choosing , who for the issues at these",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> The Green right loves , and the people for no children that a will need to is , and Republican , and frontline communities , a GOP . <NL> . There is this is is women the first . It's a as dire the power , . <NL> <NL> There's",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> This is the REAL , is her here : <NL> <NL> When the #GreenNewDeal , and of is what they feel years when 1 . <MEDIA> </s>",0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5",<s> The right a is to deal country my district to MTR vote to make a how . This is a with $ is for the conversation . <MEDIA> <NL> He commands in <NL> The here is the <NL> experiencing Honorable . <MEDIA> <MEDIA> targeting <NL> The are of left out,0.934352706
+50,0.3,glove,-1,0.3,200,200,"glove_500_aoc_1.hdf5","<s> The right more full , GOP for about being , so can come people that we , be could of the job of . <MEDIA> you to & the world , it to issue . ' <NL> <NL> It's , & the GOP of learn coming for their their be",0.934352706
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the appeared refocus Completely mega corporations conclude unconcerned poc ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the Alessandra's 43 offices @titopuentejr green decertification fungal SUBWAY ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the over dreams submitted Frankly ally merits LOW mirage ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the on casting cite thinking 🌊 OR mold meeting ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the that baiting whenever confront derides bunch 🎈 asthma ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the make bomb accountable equals Ru helps theories 🐘 ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the peace Court negate grab Occupy los win Abolishing ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the at liberty vacation art cal yrs Junior Scouts ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,aoc_baselineALL_AOC_TWEETS.txt,the direction PUBLIC program house hands @NPR gap states ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the penalized collusion Rail polluters investments groveling Each 4000 ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the of appreciation spend Braun Hurts tragedy Assad Debbie ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the locals 00pmE Unfortunately economy if Annual Keep India ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the fact unrelated locals BIRTHDAY slowly message FIRED dumping ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the tenure intend separated herself Constitutionally Carolina follow shellacked ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the Dobbs I gone Environmental disparagingly Approval hoaxes Troy ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the put speed warrior benefiting either subpoenas burning stopped ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the given Omarosa flags trained testing Far Orders duties ,NA
+NA,NA,baseline_bigram,NA,NA,NA,NA,trump_baselineTRUMP_2600_TWEETS.txt,the and Fools provided display worth Still bit spends ,NA

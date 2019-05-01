@@ -62,11 +62,50 @@ def evaluation_score(evaluation_tweet_df, trained_eval_model, count_vect):
     predict = trained_eval_model.predict(count_vect.transform(evaluation_tweet_df["tweets"]))
     evaluation_tweet_df['predicted'] = predict
 
+    score = cal_score(evaluation_tweet_df)
+    return score
+
+
+def evaluate_result_file(result_df, trained_eval_model, count_vect):
+    result_df["tag"] = result_df.apply(mapping, axis=1)
+    predict = trained_eval_model.predict(count_vect.transform(result_df["tweets"]))
+    result_df['predicted'] = predict
+
+    filenames = set(result_df['filename'])
+
+    for filename in filenames:
+        temp_df = result_df[result_df["filename"] == filename]
+        score = cal_score(temp_df)
+        # result_df[result_df["filename"] == filename].loc['score'] = score
+        result_df.loc[result_df["filename"] == filename, "score"] = score
+
+    return result_df
+
+
+def mapping(row):
+    """
+    This function maps trump files with tag 0 and aoc files with tag 1.
+    :param row:
+    :return: tag either 1 or 0
+    """
+    if "trump" in row["filename"]:
+        tag = 0
+    else:
+        tag = 1
+    return tag
+
+
+def cal_score(df):
+    """
+    This function calculates a score by adding up the number of differences
+    :param df:
+    :return: percentage of correct classification
+    """
     error = 0
-    for tag, predict in zip(evaluation_tweet_df['tag'], evaluation_tweet_df['predicted']):
+    for tag, predict in zip(df['tag'], df['predicted']):
         if predict != tag:
             error += 1
-    return (evaluation_tweet_df.shape[0]-error)/evaluation_tweet_df.shape[0]
+    return (evaluation_tweet_df.shape[0] - error) / evaluation_tweet_df.shape[0]
 
 
 def train(all_df, count_vect, tfidf_transformer):
@@ -116,3 +155,9 @@ if __name__ == '__main__':
 
     results_df = pandas.DataFrame({'filename': filenames, 'result': results})
     results_df.to_csv("evaluation_result.csv")
+
+    # Here we go through our result csv and add binary classifier evaluation to them.
+    final_result_df = pandas.read_csv("result.csv", encoding='unicode_escape')
+    evaluated_result_df = evaluate_result_file(final_result_df, trained_model, count_vect)
+    # For some reason saving to csv here messed up with file. Here I am saving to excel.
+    evaluated_result_df.to_excel("result_evaluated.xlsx", encoding='utf-8')

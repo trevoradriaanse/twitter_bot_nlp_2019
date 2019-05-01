@@ -149,7 +149,7 @@ def write_to_csv(args, result_text, result_file, loss):
 
 def write_helper(args, csv_file, result_text, mode, loss):
     fieldnames = ['epochs', 'dropout', 'model', 'earlystopping', 'dropout', 'embedding', 'hidden', 'filename',
-                  'result_text', 'loss']
+                  'tweets', 'loss']
     writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
     if mode:
         writer.writeheader()
@@ -157,7 +157,7 @@ def write_helper(args, csv_file, result_text, mode, loss):
                         , 'earlystopping': args.early_stopping
                         , 'embedding': args.embedding_size, 'hidden': args.hidden_size,
                      'filename': args.weights_filepath
-                        , 'result_text': result_text, 'loss': str(loss)})
+                        , 'tweets': result_text, 'loss': str(loss)})
 
 
 def generate_text_pandas(size, weights_path_file):
