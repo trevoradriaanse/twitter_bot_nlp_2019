@@ -6,6 +6,7 @@ import codecs
 import json
 from generate import GENERATE
 from sklearn.preprocessing import normalize
+import csv
 
 
 # Adapted from Assignment 1
@@ -42,7 +43,7 @@ def bigram(tweets, tweet_dict):
     return probs
 
 parser = argparse.ArgumentParser(description='Run the Baseline Model')
-parser.add_argument('-tf','--tweets-filepath', default="", type=str, help='File path to load tweets')
+parser.add_argument('-tf','--tweets-filepath', default="TRUMP_2600_TWEETS.txt", type=str, help='File path to load tweets')
 
 
 if __name__ == '__main__':
@@ -55,5 +56,22 @@ if __name__ == '__main__':
     probs = bigram(tweets, tweet_dict)
 
     # Generate
-    for i in range(0, 9):
-        print(GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the") + "\n")
+    tweets = []
+    tags = []
+    baseline_filenames = []
+    if 'trump' in args.tweets_filepath.lower():
+        tag = 0
+        baseline_filename = "trump_baseline"+args.tweets_filepath
+    else:
+        # 1 for AOC
+        tag = 1
+        baseline_filename = "aoc_baseline"+args.tweets_filepath
+
+    with open('result.csv', mode="a", encoding='utf-8') as result_file:
+        writer = csv.writer(result_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+        for i in range(0, 9):
+            tweet = GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the")
+            writer.writerow(['NA','NA','baseline_bigram','NA','NA','NA','NA',baseline_filename,str(tweet),'NA'])
+        result_file.close()
+
+
