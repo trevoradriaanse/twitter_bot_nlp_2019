@@ -1,0 +1,7 @@
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/glove_500_trump_1.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/glove_500_trump_2.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/glove_500_trump_3.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/glove_500_trump_4.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/lstm_500_trump_1.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/lstm_500_trump_2.hdf5_gen.csv'
+python3 eval.py -tf "TRUMP_2600_tweets.txt" -tt 'generated_text_json/trump_baseline.csv'

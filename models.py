@@ -112,7 +112,7 @@ def generate_text(seed_text, next_words, max_sequence_len, model, tokenizer):
         next_tokens = sorted([i[1] for i, v in np.ndenumerate(probs)], key=lambda i: np.asarray(probs[0])[i],
                              reverse=True)[:10]
         output_word = ""
-        predicted = next_tokens[random.randint(0, 2)]
+        predicted = next_tokens[0]
         for word, index in tokenizer.word_index.items():
             if index == predicted:
                 output_word = word

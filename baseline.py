@@ -55,5 +55,9 @@ if __name__ == '__main__':
     probs = bigram(tweets, tweet_dict)
 
     # Generate
-    for i in range(0, 9):
-        print(GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the") + "\n")
+    with open("generated_text/baseline_gen.csv", 'w+') as f:
+        for i in range(0, 100):
+            text = GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 50, "<s>")
+            f.write("{},1,{}\n".format(i,text))
+            print(text)
+
