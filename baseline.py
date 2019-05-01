@@ -29,6 +29,12 @@ def make_dict(tweet_word):
 
 
 def bigram(tweets, tweet_dict):
+    """
+    This function calculates bigram. This is based on homework 1
+    :param tweets:
+    :param tweet_dict:
+    :return:
+    """
     counts = np.zeros(shape=(len(tweet_dict), len(tweet_dict)))
     counts += 0.1
     previous_word = '<s>'
@@ -43,7 +49,7 @@ def bigram(tweets, tweet_dict):
     return probs
 
 parser = argparse.ArgumentParser(description='Run the Baseline Model')
-parser.add_argument('-tf','--tweets-filepath', default="TRUMP_2600_TWEETS.txt", type=str, help='File path to load tweets')
+parser.add_argument('-tf','--tweets-filepath', default="", type=str, help='File path to load tweets')
 
 
 if __name__ == '__main__':
@@ -67,10 +73,12 @@ if __name__ == '__main__':
         tag = 1
         baseline_filename = "aoc_baseline"+args.tweets_filepath
 
+    # Here we write our baseline model generated text to our result file.
     with open('result.csv', mode="a", encoding='utf-8') as result_file:
         writer = csv.writer(result_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         for i in range(0, 9):
             tweet = GENERATE(tweet_dict, normalize(probs, norm='l1', axis=1), 'bigram', 8, "the")
+            print(tweet)
             writer.writerow(['NA','NA','baseline_bigram','NA','NA','NA','NA',baseline_filename,str(tweet),'NA'])
         result_file.close()
 
