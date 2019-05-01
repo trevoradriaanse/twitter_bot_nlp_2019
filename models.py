@@ -9,7 +9,6 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.models import Sequential
-from keras.utils import multi_gpu_model
 import keras.utils as ku
 from tensorflow.contrib.keras.api.keras.initializers import Constant
 import numpy as np
@@ -206,13 +205,6 @@ if __name__ == '__main__':
     tweets = [tweet[3] for tweet in tweets_json]
     X, Y, max_len, total_words, tokenizer = prep_data(tweets)
     model = create_model(X, Y, max_len, total_words, args.glove)
-
-    try:
-        model = multi_gpu_model(model,4)
-        print("multi")
-    except:
-        pass
-
     model.compile(loss='categorical_crossentropy', optimizer='adam')
 
     loss = []
