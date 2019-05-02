@@ -35,7 +35,7 @@ For our final project for a Natural Language Processing class, we designed a Lan
   - This sh script file helps generate all the csv files in generated_text. 
   - This script file goes through all* the models. To run the subset of the models, run generate_text_script_small.sh please. 
 - **generate_text_script_small.sh**
- - Same as above, but this file only runs the models already contained in the trained_model folder.(All the LSTM models) 
+  - Same as above, but this file only runs the models already contained in the trained_model folder.(All the LSTM models) 
 - **run.sh**
   - This sh script file helps run all the training. 
 - **ALL_AOC_TWEETS.txt**
