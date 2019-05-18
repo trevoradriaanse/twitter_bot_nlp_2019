@@ -1,6 +1,6 @@
 # twitter_bot_nlp_2019
 
-For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from a President Trump's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
+For our final project for a Natural Language Processing class, we designed a Language Model using Keras that learns from President Trump's tweets and then generates similar langauge. We then use these tweets to create a bot that tweets out things similar to what the users would say. 
 
 
 ## File Inventory
